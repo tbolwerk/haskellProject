@@ -16,10 +16,13 @@ data Cell = Cell{
   xCord :: X,
   yCord :: Y,
   width :: Width,
-  height :: Height
+  height :: Height,
+  backgroundColor :: Color
   } deriving (Show)
 
-type Board = [[Cell]]
+board :: [[Cell]]
+board = [[]]
+
 
 main = runProc $ def 
 	{ procSetup  = setup
@@ -41,8 +44,8 @@ switchColor :: Float -> Float
 switchColor 255 = 0
 switchColor 0 = 255
 
-drawCell :: Cell -> Color -> Pio ()
-drawCell (Cell {player = Nothing, xCord = x, yCord = y, width = w, height=h}) c = do
+drawCell :: Cell -> Pio ()
+drawCell (Cell {player = Nothing, xCord = x, yCord = y, width = w, height=h,backgroundColor=c}) = do
   fill(grey c)
   rect(x,y) (w,h)
   local $ do
@@ -54,16 +57,16 @@ drawInCell :: X -> Y -> Width -> Height -> Pio()
 drawInCell x y w h= translate (x + (w / 2), y + (h / 2))
 
 drawColumn ::  Rows -> Cols -> Width -> Height -> Color -> Pio()
-drawColumn r c widthCell heightCell color | c <= 0 = drawCell Cell{player = Nothing,xCord =0,yCord =0, width = 0, height=0} 0
+drawColumn r c widthCell heightCell color | c <= 0 = drawCell Cell{player = Nothing,xCord =0,yCord =0, width = 0, height=0,backgroundColor =0}
 drawColumn r c widthCell heightCell color | c > 0 = do
-                                drawCell Cell{player = Nothing, xCord=(rows * widthCell), yCord=(columns * heightCell),width= widthCell,height= heightCell} color
+                                drawCell Cell{player = Nothing, xCord=(rows * widthCell), yCord=(columns * heightCell),width= widthCell,height= heightCell,backgroundColor=color} 
                                 drawColumn r (c-1) widthCell heightCell (switchColor color)
                                 where columns = fromIntegral c 
                                       rows = fromIntegral r
 
 
 drawRow :: Rows -> Cols -> Width -> Height -> Float -> Pio()
-drawRow r c w h color | r <= 0 = drawCell Cell{player = Nothing,xCord =0,yCord =0, width = 0, height=0} 0
+drawRow r c w h color | r <= 0 = drawCell Cell{player = Nothing,xCord =0,yCord =0, width = 0, height=0,backgroundColor=0} 
 drawRow r c w h color | r > 0 = do
                              drawColumn r c widthCell heightCell color
                              drawRow (r-1) c widthCell heightCell (switchColor color)
