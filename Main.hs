@@ -20,9 +20,10 @@ data Cell = Cell{
   backgroundColor :: Color
   } deriving (Show)
 
-board :: [[Cell]]
-board = [[]]
+-- board :: Cell
+-- board = []
 
+-- Cell{player = Nothing, xCord=(rows * widthCell), yCord=(columns * heightCell),width= widthCell,height= heightCell,backgroundColor=color} 
 
 main = runProc $ def 
 	{ procSetup  = setup
@@ -41,25 +42,36 @@ calculateHeightCell :: Float -> Height
 calculateHeightCell rows = rows / screenHeight
 
 switchColor :: Float -> Float
-switchColor 255 = 0
-switchColor 0 = 255
+switchColor 200 = 50
+switchColor 50 = 200
 
 drawCell :: Cell -> Pio ()
-drawCell (Cell {player = Nothing, xCord = x, yCord = y, width = w, height=h,backgroundColor=c}) = do
+drawCell (Cell {player = p, xCord = x, yCord = y, width = w, height=h,backgroundColor=c}) = do
   fill(grey c)
-  rect(x,y) (w,h)
-  local $ do
-    drawInCell x y w h
-    scale (0.5, 0.3)
-    drawHero
+  rect(x,y) (w,h) 
+  case p of
+    Nothing -> circle 0 0
+    Just White -> local $ do
+      drawInCell x y w h
+      scale (0.5, 0.3)
+      drawHero 255
+    Just Black -> local $ do
+      drawInCell x y w h
+      scale (0.5, 0.3)
+      drawHero 0
+
 
 drawInCell :: X -> Y -> Width -> Height -> Pio()
 drawInCell x y w h= translate (x + (w / 2), y + (h / 2))
 
+
+
+
+
 drawColumn ::  Rows -> Cols -> Width -> Height -> Color -> Pio()
 drawColumn r c widthCell heightCell color | c <= 0 = drawCell Cell{player = Nothing,xCord =0,yCord =0, width = 0, height=0,backgroundColor =0}
 drawColumn r c widthCell heightCell color | c > 0 = do
-                                drawCell Cell{player = Nothing, xCord=(rows * widthCell), yCord=(columns * heightCell),width= widthCell,height= heightCell,backgroundColor=color} 
+                                drawCell Cell{player = Nothing, xCord=(rows * widthCell), yCord=(columns * heightCell),width= widthCell,height= heightCell,backgroundColor=color}
                                 drawColumn r (c-1) widthCell heightCell (switchColor color)
                                 where columns = fromIntegral c 
                                       rows = fromIntegral r
@@ -74,7 +86,7 @@ drawRow r c w h color | r > 0 = do
                                    heightCell= 40
 
 drawBoard :: Pio()
-drawBoard = drawRow 8 8 screenWidth screenHeight 255
+drawBoard = drawRow 8 8 screenWidth screenHeight 200
 
 draw () = do
 	background (grey 150)
