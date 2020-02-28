@@ -19,7 +19,7 @@ extra-source-files:  CHANGELOG.md
 
 executable haskellProject
   main-is:             Main.hs
-  -- other-modules:       Criterion
+  other-modules:       Pieces
   -- other-extensions:
   build-depends:       base >=4.12 && <4.13, processing-for-haskell, criterion >= 1.5.6.2
   -- hs-source-dirs:

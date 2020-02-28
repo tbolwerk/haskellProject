@@ -1,5 +1,7 @@
 module Main where 
 import Graphics.Proc
+import Pieces
+
 type X = Float
 type Y = Float
 type Width = Float
@@ -16,6 +18,8 @@ data Cell = Cell{
   width :: Width,
   height :: Height
   } deriving (Show)
+
+type Board = [[Cell]]
 
 main = runProc $ def 
 	{ procSetup  = setup
@@ -36,33 +40,6 @@ calculateHeightCell rows = rows / screenHeight
 switchColor :: Float -> Float
 switchColor 255 = 0
 switchColor 0 = 255
-
-
-drawHero = do
-	drawHead
-	drawBody
-	drawLegs
-	drawArms
-
-drawHead = do	
-	fill (grey 165)	
-	circle 10 (0, -20)
-
-drawBody = do
-	fill (grey 68)
-	rect (-10, -10) (20, 40)
-
-drawLegs = do
-	fill (grey 125)	
-	rect (-7, 30) (3, 27)
-	rect (4, 30) (3, 27)
-	
-drawArms = do
-	fill (grey 125)	
-	strokeWeight 2
-	linePath [(-10, -10), (-20, 7), (-15, 15)]
-	linePath [(10, -10), (20, -27), (15, -35)]
-
 
 drawCell :: Cell -> Color -> Pio ()
 drawCell (Cell {player = Nothing, xCord = x, yCord = y, width = w, height=h}) c = do
