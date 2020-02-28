@@ -20,10 +20,6 @@ data Cell = Cell{
   backgroundColor :: Color
   } deriving (Show)
 
--- board :: Cell
--- board = []
-
--- Cell{player = Nothing, xCord=(rows * widthCell), yCord=(columns * heightCell),width= widthCell,height= heightCell,backgroundColor=color} 
 
 main = runProc $ def 
 	{ procSetup  = setup
@@ -71,10 +67,11 @@ drawInCell x y w h= translate (x + (w / 2), y + (h / 2))
 drawColumn ::  Rows -> Cols -> Width -> Height -> Color -> Pio()
 drawColumn r c widthCell heightCell color | c <= 0 = drawCell Cell{player = Nothing,xCord =0,yCord =0, width = 0, height=0,backgroundColor =0}
 drawColumn r c widthCell heightCell color | c > 0 = do
-                                drawCell Cell{player = Nothing, xCord=(rows * widthCell), yCord=(columns * heightCell),width= widthCell,height= heightCell,backgroundColor=color}
+                                drawCell Cell{player = playerOnCell c, xCord=(rows * widthCell), yCord=(columns * heightCell),width= widthCell,height= heightCell,backgroundColor=color}
                                 drawColumn r (c-1) widthCell heightCell (switchColor color)
                                 where columns = fromIntegral c 
                                       rows = fromIntegral r
+                                      playerOnCell c | c == 1 || c == 2 = Just White | c == 7 || c == 8 = Just Black | otherwise = Nothing
 
 
 drawRow :: Rows -> Cols -> Width -> Height -> Float -> Pio()
