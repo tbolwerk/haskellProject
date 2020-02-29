@@ -153,17 +153,50 @@ quickSort (p:xs) = quickSort lesser ++ [p] ++ quickSort greater
 
 -- -- Our benchmark harness.
 main = do 
-  let nArray = [1..999]
-  let aArray =  "the quick brown fox jumps over the lazy dog"  
-  print(isSelectedCell 0 0 100 100 (50, 50))
-  defaultMain [
-        bgroup "quickSort" [
-          bench "Quicksort3 list of alpha enums " $ whnf quickSort3 aArray, 
-          bench "Quicksort list of alpha enums " $ whnf quickSort aArray, 
-          bench "Quicksort3 list of integer numbers " $ whnf quickSort3 nArray,
-          bench "Quicksort list of integer numbers " $ whnf quickSort nArray,
-          bench "Mergesort list of alpha enums" $whnf mergeSort aArray,
-          bench "Mergesort list of integer numbers" $whnf mergeSort nArray
-          ]]
+  print(move points)
+  -- let nArray = [1..999]
+  -- let aArray =  "the quick brown fox jumps over the lazy dog"  
+  -- print(isSelectedCell 0 0 100 100 (50, 50))
+  -- defaultMain [
+  --       bgroup "quickSort" [
+  --         bench "Quicksort3 list of alpha enums " $ whnf quickSort3 aArray, 
+  --         bench "Quicksort list of alpha enums " $ whnf quickSort aArray, 
+  --         bench "Quicksort3 list of integer numbers " $ whnf quickSort3 nArray,
+  --         bench "Quicksort list of integer numbers " $ whnf quickSort nArray,
+  --         bench "Mergesort list of alpha enums" $whnf mergeSort aArray,
+  --         bench "Mergesort list of integer numbers" $whnf mergeSort nArray
+  --         ]]
 isSelectedCell :: Int -> Int -> Int -> Int -> (Int, Int) -> Bool
 isSelectedCell x y w h (mouseX, mouseY) | mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y+h = True | otherwise = False
+
+move points | length points > 1 && (getPoint (points !! 1) boardInitial) == 0 && (getPoint (points !! 0) boardInitial == 2) = boardInitial
+            | otherwise = boardInitial
+
+
+-- getPoint :: [[Integer]] -> (Integer, Integer) -> [Integer]
+-- getPoint board (x,y) = (board !! x) y
+getPoint (x,y) board = (board !! x) !! y
+
+points = [(1,0),(2,0)]
+
+
+--  replaceNth :: Int -> a -> [a] -> [a]
+--  replaceNth _ _ [] = []
+replaceNth n newElement xs = take n xs ++ [newElement] ++ drop (n + 1) xs
+
+-- state board points = board !! (x,y):points 
+
+
+
+boardInitial = [
+  [0,2,0,2,0,2,0,2,0,2],
+  [2,0,2,0,2,0,2,0,2,0],
+  [0,2,0,2,0,2,0,2,0,2],
+  [2,0,2,0,2,0,2,0,2,0],
+  [0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0],
+  [0,1,0,1,0,1,0,1,0,1],
+  [1,0,1,0,1,0,1,0,1,0],
+  [0,1,0,1,0,1,0,1,0,1],
+  [1,0,1,0,1,0,1,0,1,0],
+  [0,1,0,1,0,1,0,1,0,1]]

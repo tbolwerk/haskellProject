@@ -52,7 +52,7 @@ drawCell (Cell {player = p, xCord = x, yCord = y, width = w, height=h,background
   fill(grey c)
   rect(x,y) (w,h)
   m <- mouse 
-  let selectedCell = isCell x y w h m
+  let selectedCell = getCellCord x y w h m
   case selectedCell of
     Nothing -> circle 0 0
     Just cell -> local $ do
@@ -69,13 +69,20 @@ drawCell (Cell {player = p, xCord = x, yCord = y, width = w, height=h,background
       scale (0.5, 0.5)
       drawDraught 0
 
+
+-- getCell row = cell:row
+
+-- getRow board = getCell row:board 
+
+-- boardState board points = getCellCord 
+
 drawInCell :: X -> Y -> Width -> Height -> Pio()
 drawInCell x y w h= translate (x + (w / 2), y + (h / 2))
 
 
 
-isCell :: X -> Y -> Width -> Height -> (Float, Float) -> Maybe (X, Y)
-isCell x y w h (mouseX, mouseY) | mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y+h = Just (x+(w/2),y+(h/2)) | otherwise = Nothing
+getCellCord :: X -> Y -> Width -> Height -> (Float, Float) -> Maybe (X, Y)
+getCellCord x y w h (mouseX, mouseY) | mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y+h = Just (x+(w/2),y+(h/2)) | otherwise = Nothing
 
 
 
