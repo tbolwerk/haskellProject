@@ -50,7 +50,14 @@ switchColor 50 = 200
 drawCell :: Cell -> Pio ()
 drawCell (Cell {player = p, xCord = x, yCord = y, width = w, height=h,backgroundColor=c}) = do
   fill(grey c)
-  rect(x,y) (w,h) 
+  rect(x,y) (w,h)
+  m <- mouse 
+  let selectedCell = isCell x y w h m
+  case selectedCell of
+    Nothing -> circle 0 0
+    Just cell -> local $ do
+      fill (grey 255)
+      circle 15 cell
   case p of
     Nothing -> circle 0 0
     Just White -> local $ do
@@ -65,8 +72,10 @@ drawCell (Cell {player = p, xCord = x, yCord = y, width = w, height=h,background
 drawInCell :: X -> Y -> Width -> Height -> Pio()
 drawInCell x y w h= translate (x + (w / 2), y + (h / 2))
 
-isCell :: X -> Y -> Width -> Height -> (Float, Float)-> Bool
-isCell x y w h (mouseX, mouseY) | mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y+h = True | otherwise = False
+
+
+isCell :: X -> Y -> Width -> Height -> (Float, Float) -> Maybe (X, Y)
+isCell x y w h (mouseX, mouseY) | mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y+h = Just (x+(w/2),y+(h/2)) | otherwise = Nothing
 
 
 
@@ -82,7 +91,17 @@ drawColumn r c widthCell heightCell color | c > 0 = do
                                 drawColumn r (c-1) widthCell heightCell (switchColor color)
                                 where columns = fromIntegral c 
                                       rows = fromIntegral r
-                                      playerOnCell r c| ((boardInitial !! (c-1)) !! (r-1)) == 1 = Just White | ((boardInitial !! (c-1)) !! (r-1)) == 2 = Just Black | otherwise = Nothing
+                                      playerOnCell r c = (calculatePlayerOnCell r c)
+
+
+calculatePlayerOnCell :: Rows -> Cols -> Maybe Player
+calculatePlayerOnCell r c
+  | ((boardInitial !! (c-1)) !! (r-1)) == 1 = Just White 
+  | ((boardInitial !! (c-1)) !! (r-1)) == 2 = Just Black 
+  | otherwise = Nothing
+
+-- boardInitial -> all points in ps -> current board state -> calculate player on cell
+
 
 
 boardInitial = [
@@ -92,11 +111,11 @@ boardInitial = [
   [2,0,2,0,2,0,2,0,2,0],
   [0,0,0,0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0,0,0,0],
-  [1,0,1,0,1,0,1,0,1,0],
   [0,1,0,1,0,1,0,1,0,1],
   [1,0,1,0,1,0,1,0,1,0],
   [0,1,0,1,0,1,0,1,0,1],
-  [1,0,1,0,1,0,1,0,1,0]]
+  [1,0,1,0,1,0,1,0,1,0],
+  [0,1,0,1,0,1,0,1,0,1]]
 
 drawRow :: Rows -> Cols -> Width -> Height -> Float -> Pio()
 drawRow r c w h color | r <= 0 = drawCell Cell{player = Nothing,xCord =0,yCord =0, width = 0, height=0,backgroundColor=0} 
@@ -109,8 +128,6 @@ drawRow r c w h color | r > 0 = do
 drawBoard :: Pio()
 drawBoard = do 
   drawRow 10 10 screenWidth screenHeight 200
-  m <- mouse
-  circle 15 m
 
 draw ps = do
 	background (grey 150)
