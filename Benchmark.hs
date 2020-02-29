@@ -155,6 +155,7 @@ quickSort (p:xs) = quickSort lesser ++ [p] ++ quickSort greater
 main = do 
   let nArray = [1..999]
   let aArray =  "the quick brown fox jumps over the lazy dog"  
+  print(isSelectedCell 0 0 100 100 (50, 50))
   defaultMain [
         bgroup "quickSort" [
           bench "Quicksort3 list of alpha enums " $ whnf quickSort3 aArray, 
@@ -164,3 +165,5 @@ main = do
           bench "Mergesort list of alpha enums" $whnf mergeSort aArray,
           bench "Mergesort list of integer numbers" $whnf mergeSort nArray
           ]]
+isSelectedCell :: Int -> Int -> Int -> Int -> (Int, Int) -> Bool
+isSelectedCell x y w h (mouseX, mouseY) | mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y+h = True | otherwise = False

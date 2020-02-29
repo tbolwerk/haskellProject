@@ -16,3 +16,6 @@
 2020-02-24 19:58:20 [ThreadId 19] ERROR phoityne - load file fail.[/Users/twanbolwerk/haskellProject/test/Spec.hs]
 2020-02-24 19:58:20 [ThreadId 19] ERROR phoityne - startup load error. /Users/twanbolwerk/haskellProject/test/Spec.hs
 
+2020-02-29 10:53:16 [ThreadId 19] ERROR phoityne - load file fail.[/Users/twanbolwerk/haskellProject/test/Spec.hs]
+2020-02-29 10:53:16 [ThreadId 19] ERROR phoityne - startup load error. /Users/twanbolwerk/haskellProject/test/Spec.hs
+

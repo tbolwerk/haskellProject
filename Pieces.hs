@@ -1,6 +1,12 @@
 module Pieces where
 import Graphics.Proc
-drawHero c = do
+drawDraught c = do
+	fill (grey c)
+	circle 30 (0, 0)
+
+
+
+drawPawn c = do
 	drawHead c
 	drawBody c
 	drawLegs c

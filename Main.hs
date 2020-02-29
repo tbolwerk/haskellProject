@@ -21,21 +21,27 @@ data Cell = Cell{
   } deriving (Show)
 
 
+
 main = runProc $ def 
 	{ procSetup  = setup
-	, procDraw   = draw }
+	, procDraw   = draw
+  , procMousePressed = mousePressed}
 
-screenWidth  = 400
-screenHeight = 400
+screenWidth  = 800
+screenHeight = 800
 center = (screenWidth / 2, screenHeight / 2)
 
 setup = do
-	size (screenWidth, screenHeight)	
+	size (screenWidth, screenHeight)
+	strokeWeight 2
+	stroke (grey 255)
+	return []
 
-calculateWidthCell :: Float -> Width
-calculateWidthCell columns = columns / screenWidth
-calculateHeightCell :: Float -> Height
-calculateHeightCell rows = rows / screenHeight
+
+calculateWidthCell:: Width
+calculateWidthCell = screenWidth /15
+calculateHeightCell ::  Height
+calculateHeightCell = screenHeight/15
 
 switchColor :: Float -> Float
 switchColor 200 = 50
@@ -49,19 +55,21 @@ drawCell (Cell {player = p, xCord = x, yCord = y, width = w, height=h,background
     Nothing -> circle 0 0
     Just White -> local $ do
       drawInCell x y w h
-      scale (0.5, 0.3)
-      drawHero 255
+      scale (0.5, 0.5)
+      drawDraught 255
     Just Black -> local $ do
       drawInCell x y w h
-      scale (0.5, 0.3)
-      drawHero 0
+      scale (0.5, 0.5)
+      drawDraught 0
 
 
 drawInCell :: X -> Y -> Width -> Height -> Pio()
 drawInCell x y w h= translate (x + (w / 2), y + (h / 2))
 
+isSelectedCell :: Int -> Int -> Int -> Int -> (Int, Int) -> Bool
+isSelectedCell x y w h (mouseX, mouseY) | mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y+h = True | otherwise = False
 
-
+  -- checkMoves ps board = 
 
 
 drawColumn ::  Rows -> Cols -> Width -> Height -> Color -> Pio()
@@ -71,20 +79,40 @@ drawColumn r c widthCell heightCell color | c > 0 = do
                                 drawColumn r (c-1) widthCell heightCell (switchColor color)
                                 where columns = fromIntegral c 
                                       rows = fromIntegral r
-                                      playerOnCell c | c == 1 || c == 2 = Just White | c == 7 || c == 8 = Just Black | otherwise = Nothing
+                                      playerOnCell c | c <= 4 && color == 50 = Just White | c>=7 && color == 50 = Just Black | otherwise = Nothing
 
 
 drawRow :: Rows -> Cols -> Width -> Height -> Float -> Pio()
 drawRow r c w h color | r <= 0 = drawCell Cell{player = Nothing,xCord =0,yCord =0, width = 0, height=0,backgroundColor=0} 
 drawRow r c w h color | r > 0 = do
                              drawColumn r c widthCell heightCell color
-                             drawRow (r-1) c widthCell heightCell (switchColor color)
-                             where widthCell = 40
-                                   heightCell= 40
+                             drawRow (r-1) c w h (switchColor color)
+                             where widthCell = calculateWidthCell
+                                   heightCell= calculateHeightCell
 
 drawBoard :: Pio()
-drawBoard = drawRow 8 8 screenWidth screenHeight 200
+drawBoard = do 
+  drawRow 10 10 screenWidth screenHeight 200
+  m <- mouse
+  circle 15 m
 
-draw () = do
+draw ps = do
 	background (grey 150)
 	drawBoard
+  	case ps of
+		[] -> return ()
+		_  -> do
+			m <- mouse
+			linePath (m : ps)
+
+mousePressed ps = do
+  mb <- mouseButton
+  case mb of
+    Just LeftButton -> do
+      m <- mouse
+      return (m : ps)
+    Just RightButton -> do
+      if null ps 
+        then return []
+        else return (tail ps)
+    _ -> return ps
