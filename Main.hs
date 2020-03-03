@@ -120,25 +120,26 @@ drawRow r c w h color | r > 0 = do
                              where widthCell = calculateWidthCell
                                    heightCell= calculateHeightCell
 
+fillColor p     | isWhite $ toIntTuple $ calculateCord p = fill (grey 255)
+                | isBlack $ toIntTuple $ calculateCord p = fill (grey 0)
+                | otherwise = fill (grey 123)
+
 drawAllPoints [] = circle 0 (0,0)
 drawAllPoints (p:ps) = do
-  if(isWhite $ toIntTuple $ calculateCord p) then 
-    fill (grey 255)
-  else
-    fill (grey 0)
+  fillColor p
   circle 15 p
   drawAllPoints ps
 
 
 calculateCord (x,y) = (col,row)
-    where col = x / calculateWidthCell
-          row = y / calculateHeightCell
+    where col = (x-calculateWidthCell/2) / calculateWidthCell
+          row = (y-calculateHeightCell/2) / calculateHeightCell
 
 toInt :: Float -> Int
-toInt x = floor x
+toInt  = round
 
 toIntTuple :: (Float,Float) -> (Int,Int)
-toIntTuple (x,y)= (toInt x-1, toInt y-1)
+toIntTuple (x,y)= (toInt x, toInt y)
 
 
 drawBoard :: Pio()
