@@ -52,13 +52,6 @@ drawCell :: Cell -> Pio ()
 drawCell (Cell {player = p, xCord = x, yCord = y, width = w, height=h,backgroundColor=c}) = do
   fill(grey c)
   rect(x,y) (w,h)
-  m <- mouse 
-  let selectedCell = getCellCord m
-  case selectedCell of
-    Nothing -> circle 0 0
-    Just cell -> local $ do
-      fill (grey 255)
-      circle 15 cell
   case p of
     Nothing -> circle 0 0
     Just White -> local $ do
@@ -87,17 +80,6 @@ getCellCord (mouseX, mouseY) | mouseX <= calculateWidthCell*offset || mouseX > (
                                      | otherwise = Just ( ((fromIntegral $ floor (mouseX / calculateWidthCell)) * calculateWidthCell) + (calculateWidthCell/2) ,  ((fromIntegral $ floor (mouseY / calculateHeightCell))*calculateHeightCell) + (calculateHeightCell/2))
 
 
--- calculateCurrentBoardState x: (p:ps) = getCellCord x y w h p
--- op basis van point -> initial board nummer krijgen en aanpassen
--- dubbele array locatie krijgen op basis van point
-
--- get2DimArrayIndex p:ps = 
-
-
-  -- checkMoves ps board = 
--- checkMoves ps board = isSelectedCell x y calculateHeightCell calculateHeightCell (mouseX, mouseY)
---       where (x, y) = p:ps
-
 drawColumn ::  Rows -> Cols -> Width -> Height -> Color -> Pio()
 drawColumn r c widthCell heightCell color | c <= 0 = drawCell Cell{player = Nothing,xCord =0,yCord =0, width = 0, height=0,backgroundColor =0}
 drawColumn r c widthCell heightCell color | c > 0 = do
@@ -110,12 +92,12 @@ drawColumn r c widthCell heightCell color | c > 0 = do
 
 calculatePlayerOnCell :: Rows -> Cols -> Maybe Player
 calculatePlayerOnCell r c
-  | ((boardInitial !! (c-1)) !! (r-1)) == 1 = Just White 
-  | ((boardInitial !! (c-1)) !! (r-1)) == 2 = Just Black 
+  | isWhite (c,r) = Just White 
+  | isBlack (c,r) = Just Black 
   | otherwise = Nothing
 
--- boardInitial -> all points in ps -> current board state -> calculate player on cell
-
+isWhite (c,r) = ((boardInitial !! (c-1)) !! (r-1)) == 1
+isBlack (c,r) = ((boardInitial !! (c-1)) !! (r-1)) == 2
 
 
 boardInitial = [
@@ -128,8 +110,7 @@ boardInitial = [
   [0,1,0,1,0,1,0,1,0,1],
   [1,0,1,0,1,0,1,0,1,0],
   [0,1,0,1,0,1,0,1,0,1],
-  [1,0,1,0,1,0,1,0,1,0],
-  [0,1,0,1,0,1,0,1,0,1]]
+  [1,0,1,0,1,0,1,0,1,0]]
 
 drawRow :: Rows -> Cols -> Width -> Height -> Float -> Pio()
 drawRow r c w h color | r <= 0 = drawCell Cell{player = Nothing,xCord =0,yCord =0, width = 0, height=0,backgroundColor=0} 
@@ -138,6 +119,26 @@ drawRow r c w h color | r > 0 = do
                              drawRow (r-1) c w h (switchColor color)
                              where widthCell = calculateWidthCell
                                    heightCell= calculateHeightCell
+
+drawAllPoints [] = circle 0 (0,0)
+drawAllPoints (p:ps) = do
+  if(isWhite $ toIntTuple $ calculateCord p) then 
+    fill (grey 255)
+  else
+    fill (grey 0)
+  circle 15 p
+  drawAllPoints ps
+
+
+calculateCord (x,y) = (col,row)
+    where col = x / calculateWidthCell
+          row = y / calculateHeightCell
+
+toInt :: Float -> Int
+toInt x = floor x
+
+toIntTuple :: (Float,Float) -> (Int,Int)
+toIntTuple (x,y)= (toInt x-1, toInt y-1)
 
 
 drawBoard :: Pio()
@@ -149,10 +150,7 @@ draw ps = do
   	case ps of
 		[] -> return ()
 		_  -> do
-      -- fill (grey 255)
-      -- linePath (ps)
-			 (map (\p -> circle 15 p) ps) !! 0
-
+			 drawAllPoints ps
 mousePressed ps = do
   mb <- mouseButton
   case mb of
@@ -160,7 +158,8 @@ mousePressed ps = do
       m <- mouse
       let selectedCell = getCellCord m
       case selectedCell of
-          Just cell -> return (cell : ps)
+          Just cell ->  return (cell : ps)
+          Nothing ->  return ([])
     Just RightButton -> do
       if null ps 
         then return []
