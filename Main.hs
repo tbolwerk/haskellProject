@@ -125,13 +125,15 @@ fillColor p     | isWhite $ toIntTuple $ calculateCord p = fill (grey 255)
                 | otherwise = fill (grey 123)
 
 drawAllPoints [] = circle 0 (0,0)
-drawAllPoints (p:ps) = do
-  fillColor p
+drawAllPoints (p:pr:ps) = do
+  fillColor pr
   circle 15 p
   drawAllPoints ps
+drawAllPoints (p:ps) = drawAllPoints ps
 
 
-calculateCord (x,y) = (col,row)
+
+calculateCord (x,y) = (row ,col)
     where col = (x-calculateWidthCell/2) / calculateWidthCell
           row = (y-calculateHeightCell/2) / calculateHeightCell
 
