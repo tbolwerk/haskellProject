@@ -30,7 +30,8 @@ main = runProc $ def
 screenWidth  = 800
 screenHeight = 800
 center = (screenWidth / 2, screenHeight / 2)
-
+offset = 1
+numberOfCells = 10
 setup = do
 	size (screenWidth, screenHeight)
 	strokeWeight 2
@@ -52,7 +53,7 @@ drawCell (Cell {player = p, xCord = x, yCord = y, width = w, height=h,background
   fill(grey c)
   rect(x,y) (w,h)
   m <- mouse 
-  let selectedCell = getCellCord x y w h m
+  let selectedCell = getCellCord m
   case selectedCell of
     Nothing -> circle 0 0
     Just cell -> local $ do
@@ -80,11 +81,17 @@ drawInCell :: X -> Y -> Width -> Height -> Pio()
 drawInCell x y w h= translate (x + (w / 2), y + (h / 2))
 
 
+getCellCord :: (Float, Float) ->  Maybe (X, Y)
+getCellCord (mouseX, mouseY) | mouseX <= calculateWidthCell*offset || mouseX > (calculateWidthCell * (numberOfCells + offset)) = Nothing
+                                     | mouseY < calculateHeightCell*offset || mouseY > (calculateHeightCell * (numberOfCells + offset)) = Nothing
+                                     | otherwise = Just ( ((fromIntegral $ floor (mouseX / calculateWidthCell)) * calculateWidthCell) + (calculateWidthCell/2) ,  ((fromIntegral $ floor (mouseY / calculateHeightCell))*calculateHeightCell) + (calculateHeightCell/2))
 
-getCellCord :: X -> Y -> Width -> Height -> (Float, Float) -> Maybe (X, Y)
-getCellCord x y w h (mouseX, mouseY) | mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y+h = Just (x+(w/2),y+(h/2)) | otherwise = Nothing
 
+-- calculateCurrentBoardState x: (p:ps) = getCellCord x y w h p
+-- op basis van point -> initial board nummer krijgen en aanpassen
+-- dubbele array locatie krijgen op basis van point
 
+-- get2DimArrayIndex p:ps = 
 
 
   -- checkMoves ps board = 
@@ -132,25 +139,28 @@ drawRow r c w h color | r > 0 = do
                              where widthCell = calculateWidthCell
                                    heightCell= calculateHeightCell
 
+
 drawBoard :: Pio()
 drawBoard = do 
   drawRow 10 10 screenWidth screenHeight 200
-
 draw ps = do
 	background (grey 150)
 	drawBoard
   	case ps of
 		[] -> return ()
 		_  -> do
-			m <- mouse
-			linePath (m : ps)
+      -- fill (grey 255)
+      -- linePath (ps)
+			 (map (\p -> circle 15 p) ps) !! 0
 
 mousePressed ps = do
   mb <- mouseButton
   case mb of
     Just LeftButton -> do
       m <- mouse
-      return (m : ps)
+      let selectedCell = getCellCord m
+      case selectedCell of
+          Just cell -> return (cell : ps)
     Just RightButton -> do
       if null ps 
         then return []

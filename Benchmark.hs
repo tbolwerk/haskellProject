@@ -1,5 +1,5 @@
 module Benchmark where
-
+import Data.Sequence
 import Criterion.Main
 import Data.List
 fact :: Integer -> Integer
@@ -58,14 +58,6 @@ merge (a:as) (b:bs)
   | otherwise = b:merge (a:as) bs
 
 
-
-
-
--- medianOfThree :: (Ord a) => [a] -> a
--- medianOfThree xs | (first' xs) > (last' xs) = first' xs | first' xs <= last' xs = last' xs
-
-
-
 first' :: (Ord a, Num a, Eq a) => [a] -> a
 first' [] = error "array is empty"
 first' [a] = a
@@ -99,13 +91,6 @@ initials _  "" = "lastname cannot be empty"
 initials firstname lastname = [f,i] ++ ". " ++ [l] ++ "."
           where (f:_:i:_) = firstname
                 (l:a:_) = lastname
-
-
-
-
-strangeThings :: (Ord a) => [a] -> [a]
-strangeThings [] = []
-strangeThings xs = xs
 
 
 -- Tail [2,3,4]
@@ -149,11 +134,14 @@ quickSort (p:xs) = quickSort lesser ++ [p] ++ quickSort greater
         lesser = filter (< p) xs
         greater = filter (>= p) xs
 
-
+getCellCord :: X -> Y -> Width -> Height -> (Float, Float) -> Maybe (X, Y)
+getCellCord x y w h (mouseX, mouseY) | mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y+h = Just (x+(w/2),y+(h/2)) | otherwise = Nothing
+calculateCurrentBoardState :: [Cell] -> [(Float, Float)] -> Maybe (X,Y)
+calculateCurrentBoardState ((Cell player x y w h c):board) (p:ps) = getCellCord x y w h p
 
 -- -- Our benchmark harness.
 main = do 
-  print(move points)
+  print("test")
   -- let nArray = [1..999]
   -- let aArray =  "the quick brown fox jumps over the lazy dog"  
   -- print(isSelectedCell 0 0 100 100 (50, 50))
@@ -169,16 +157,34 @@ main = do
 isSelectedCell :: Int -> Int -> Int -> Int -> (Int, Int) -> Bool
 isSelectedCell x y w h (mouseX, mouseY) | mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y+h = True | otherwise = False
 
-move points | length points > 1 && (getPoint (points !! 1) boardInitial) == 0 && (getPoint (points !! 0) boardInitial == 2) = boardInitial
-            | otherwise = boardInitial
+-- move points | length points > 1 && (getPoint (points !! 1) boardInitial) == 0 && (getPoint (points !! 0) boardInitial == 2) = replaceNth 1 2 (boardInitial ::[[Int]])
+--             | otherwise = boardInitial
 
 
 -- getPoint :: [[Integer]] -> (Integer, Integer) -> [Integer]
 -- getPoint board (x,y) = (board !! x) y
 getPoint (x,y) board = (board !! x) !! y
 
+
 points = [(1,0),(2,0)]
 
+type X = Float
+type Y = Float
+type Width = Float
+type Height = Float
+type Color = Float
+type Rows = Int
+type Cols = Int
+
+data Player = White | Black deriving (Eq, Show)
+data Cell = Cell{
+  player :: Maybe Player,
+  xCord :: X,
+  yCord :: Y,
+  width :: Width,
+  height :: Height,
+  backgroundColor :: Color
+  } deriving (Show)
 
 --  replaceNth :: Int -> a -> [a] -> [a]
 --  replaceNth _ _ [] = []
