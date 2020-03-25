@@ -105,7 +105,7 @@ boardInitial = [
   [2,0,2,0,2,0,2,0,2,0],
   [0,2,0,2,0,2,0,2,0,2],
   [2,0,2,0,2,0,2,0,2,0],
-  [0,0,0,0,0,0,0,0,0,0],
+  [2,0,0,0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0,0,0,0],
   [0,1,0,1,0,1,0,1,0,1],
   [1,0,1,0,1,0,1,0,1,0],
@@ -144,12 +144,15 @@ toIntTuple :: (Float,Float) -> (Int,Int)
 toIntTuple (x,y)= (toInt x, toInt y)
 
 
-drawBoard :: Pio()
-drawBoard = do 
-  drawRow 10 10 screenWidth screenHeight 200
+drawBoard :: [a] -> Pio()
+drawBoard ps = do 
+  case ps of
+    [] -> return ()
+    _  -> do
+      drawRow 10 10 screenWidth screenHeight 200
 draw ps = do
 	background (grey 150)
-	drawBoard
+	drawBoard ps
   	case ps of
 		[] -> return ()
 		_  -> do
