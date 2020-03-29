@@ -1,4 +1,29 @@
-# haskellProject
+# Haskell (Functional programming paradigma)
+## Inleiding
+Tijdens het eerste en tweede jaar leerden wij programeren met het paradigma imperatief. In het eerste jaar vooral procedural, bijvoorbeeld in C heb ik met de arduino geprogrammeerd. Dit betekent dat het abstractie niveau laag is. Ik vertel doormiddel van code wat de code moet doen, om tot iets te komen. 
+
+In het tweede jaar ben ik overgestapt van procedural naar object georienteerd. Het zijn beide imperatieve paradigma's wat niet meer of minder betekent dan dat ik de machine uitleg hoe het iets moet doen aan de hand van code. 
+
+Het verschil tussen object georienteerd en procedural zit hem erin dat de groepering anders gedaan wordt.
+
+Voor mij nu de uitdaging om over te gaan op een heel ander paradigma, namelijk decleratief. Dit komt deels overeen met SQL, waarin je beschrijft wat je wil in plaats van hoe je iets wil. Een declaratie betekent ook een aangifte, als in aangeven wat je wilt.
+
+## Keuze programmeer taal
+Mijn persoonlijke interesse ging uit naar Rust, dit is een vrij nieuwe programmeer taal met de focus op concurrency save en performance. Ondanks dat is mijn keuze gevallen op Haskell, omdat dit een unieke kans is om functioneel te programmeren. Haskell is dan wellicht niet de meest gebruikte functionele programmeer taal en heeft daardoor niet de grootste community, maar is wel de grondlegger van veel begrippen in functioneel programeren. Denk bijvoorbeeld aan Monads.
+
+|  Criteria | Clojure | Rust  | Erlang  | Haskell  |
+|---|---|---|---|---|
+| functioneel | +  | - | + | ++ |
+| community  | +  | +  | -  | -  |
+| documentatie  | +  | ++  | --  | +  |
+| gebruikt in productie  | +  | +  | ++ *1* |  + |
+| performance  | +  |  ++ | +  | + |
+| snel te leren *2* |  ++ | +  | --  | --  |
+
+*1* gebruikt in Whatsapp relevant voor het ASD-project
+
+*2* overeenkomst met java & c#
+
 ## Dag 1 Haskell Onderzoek functioneel programeren
 
 Blog functioneel haskell
@@ -140,6 +165,13 @@ quickSort3 xs = quickSort3 lesser ++ sortedArray ++ quickSort3 greater
 ```
 
 ## Dag 4 Haskell Benchmark performance van quicksort
+Importeren van packages, library zoals criterion een benchmarking tool.
+prereqisites: cabal 
+
+Genereer criterion benchmarks met:
+[Benchmark genereren](Benchmark.hs)
+
+$ cabal v2-run Benchmark.hs
 ### Benchmarking results: 
 ![alt text](1.png "screenshot 1")
 ![alt text](2.png "screenshot 2")
@@ -147,9 +179,18 @@ quickSort3 xs = quickSort3 lesser ++ sortedArray ++ quickSort3 greater
 ![alt text](4.png "screenshot 4")
 ![alt text](5.png "screenshot 5")
 
-prereqisites: cabal 
+## Dag 5 Start uitdaging chess board
+Het was even puzzelen voordat ik het goed had. Het lijkt simpel 2 dimensionale array met een boolean isWhite. Echter bleek dit toch net wat complexer in een functinele programmeer taal.
+![alt text](6.jpeg "screenshot 1")
+![alt text](7.jpeg "screenshot 2")
+![alt text](8.jpeg "screenshot 3")
+![alt text](9.jpeg "screenshot 4")
+![alt text](10.jpeg "screenshot 5")
 
-Genereer criterion benchmarks met:
-[Benchmark genereren](Benchmark.hs)
+## Dag 6 Start uitdaging chess pieces
+Mijn intieele idee was om de pieces uit een afbeelding te halen. Helaas ondersteund de processing library van haskell dit niet. Het is alleen mogelijk omm simpele figuren te tekenen. Dit zou betekenen dat ik alle pieces moet tekenen in processing in haskell, terwijl ik liever eerst een werkend bord heb. 
+![alt text](11.jpeg "screenshot 5")
+![alt text](12.jpeg "screenshot 5")
 
-$ cabal v2-run Benchmark.hs
+Ik heb mijn uitdaging veranderd naar een dambord. Het is eenvoudig om een circel te tekenen, damsteen bedoel ik.
+
