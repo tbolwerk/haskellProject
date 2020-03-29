@@ -339,6 +339,8 @@ calculateCord (x,y) = (row ,col)
           row = (y-calculateHeightCell/2) / calculateHeightCell
 ```
 
+![alt text](243711089.gif "screenshot 5")
+
 Terminal run :
 $ cabal v2-run 
 
