@@ -105,7 +105,7 @@ boardInitial = [
   [2,0,2,0,2,0,2,0,2,0],
   [0,2,0,2,0,2,0,2,0,2],
   [2,0,2,0,2,0,2,0,2,0],
-  [2,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0,0,0,0],
   [0,1,0,1,0,1,0,1,0,1],
   [1,0,1,0,1,0,1,0,1,0],
@@ -130,7 +130,6 @@ drawAllPoints (p:pr:ps) = do
   circle 15 p
   drawAllPoints ps
 drawAllPoints (p:ps) = drawAllPoints ps
-
 
 
 calculateCord (x,y) = (row ,col)
