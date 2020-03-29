@@ -9,7 +9,7 @@ Het verschil tussen object georienteerd en procedural zit hem erin dat de groepe
 Voor mij nu de uitdaging om over te gaan op een heel ander paradigma, namelijk decleratief. Dit komt deels overeen met SQL, waarin je beschrijft wat je wil in plaats van hoe je iets wil. Een declaratie betekent ook een aangifte, als in aangeven wat je wilt.
 
 ## Keuze programmeer taal
-Mijn persoonlijke interesse ging uit naar Rust, dit is een vrij nieuwe programmeer taal met de focus op concurrency save en performance. Ondanks dat is mijn keuze gevallen op Haskell, omdat dit een unieke kans is om functioneel te programmeren. Haskell is dan wellicht niet de meest gebruikte functionele programmeer taal en heeft daardoor niet de grootste community, maar is wel de grondlegger van veel begrippen in functioneel programeren. Denk bijvoorbeeld aan Monads.
+Mijn persoonlijke interesse ging uit naar Rust, dit is een vrij nieuwe programmeer taal met de focus op concurrency save en performance. Ondanks dat is mijn keuze gevallen op Haskell, omdat dit een unieke kans is om functioneel te programmeren. Haskell is dan wellicht niet de meest gebruikte functionele programmeer taal en heeft daardoor niet de grootste community, maar is wel de grondlegger van veel begrippen in functioneel programeren. Denk bijvoorbeeld aan Monads. Tenslotte is Haskell de enige taal die puur functioneel is. Het eerste criterium punt is hier dan ook doorslag geven in geweest.
 
 |  Criteria | Clojure | Rust  | Erlang  | Haskell  |
 |---|---|---|---|---|
@@ -343,6 +343,14 @@ Terminal run :
 $ cabal v2-run 
 
 Om het zelf uit te proberen. 
+
+TODO: 
+
+De pieces worden nu vanuit de initiele positie berekent. Deze veranderd natuurlijk als ik een piece 2 keer verplaats. Hier houdt de applicatie nu geen rekening mee. De lijst wordt daarnaast samen met de initiele positie getekent. Hierdoor lijkt het alsof de piece niet verplaatst wordt maar er 1 wordt toegevoegd. Dit is echter niet zo, aangezien de kleur van de piece wordt bepaald door het eerste punt. 
+
+Ook moeten er nog spelregels worden toegevoegd. Een piece mag alleen links en naar rechts. Aan de kant van de opponent moet een piece geupgrade worden. 
+
+Er moet een tegenstander (AI) komen, die gebruik maakt van het minimax algoritme. 
 
 ## Conclussie
 Het functioneel programmeren kent een aantal handige technieken zoals pattern matching en guards. Dat het aantal lines of codes drastisch kan verminderen. Dit gaat wel vaak tenkosten van de leesbaarheid. Ik schrijf deze conclussie en een gedeelte van de blog nu achteraf. Ik merk dat ik nu al moeite heb om de code in êên oogopslag te begrijpen. Dit heb ik met een veel verbosere taal als Java of C# niet. Dit kan ook komen door het gebrek aan ervaring. Ik denk dat vooral voor tools als encryptie en bepaalde complexe pipelines waaraan weinig verandert zal worden functioneel programmeren een uitkomst kan bieden in termen van fout vermindering. 
